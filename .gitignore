@@ -4,3 +4,4 @@
 /static/
 *.pyc
 /app.yaml
+/num_sheet.json

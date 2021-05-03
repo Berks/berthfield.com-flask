@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request
 import os
 import datetime
+import json
 
 # Imports for the twilio sms endpoint
 import sendgrid
-from sendgrid.helpers.mail import Email, Mail, Personalization
-from validate_email import validate_email
+from sendgrid.helpers.mail import Mail
+# from validate_email import validate_email
 
 # Create sendgrid instance
 sg = sendgrid.SendGridAPIClient(api_key=os.environ["SENDGRID_API_KEY"])
@@ -14,23 +15,32 @@ app = Flask(__name__)
 
 # Set attribute to mitigate error in dev environ... Not sure of the root cause
 app.__name__ = "__main__"
-# app.name = "Berthfield Server"
+app.name = "Berthfield Server"
 
 # Get formatted date for the index template.
 date = datetime.datetime.now()
 formatted_date = date.strftime("%b, %Y")
 
 
-def send_email(to_email):
+def email_lookup(num):
+    with open("num_sheet.json") as data:
+        num_dict = json.load(data)
+        to_email = {value for (key, value) in num_dict.items() if str(num) == key}
+        return to_email.pop()
+
+
+def send_email(to_email, txt_from, txt_to, txt_body):
     """Send a templated email with SendGrid."""
-    personalization = Personalization()
-    personalization.add_to(Email(to_email))
     mail = Mail()
-    mail.add_personalization(personalization)
-    mail.from_email = Email("owl@example.com")
-    mail.subject = "Ahoy from Twilio + SendGrid!"
-    mail.template_id = os.environ["TEMPLATE_ID"]
-    sg.client.mail.send.post(request_body=mail.get())
+    mail.from_email = f"{txt_from}@berthfield.com"
+    mail.subject = f'SMS from {txt_from} for {txt_to}.'
+    mail.to_emails = txt_to
+    mail.html_content = f'<p>{txt_body}</p>'
+
+    response = sg.send(mail)
+    print(response.status_code, response.body, response.headers)
+    # sg.client.mail.send.post(request_body=mail.get())
+
 
 
 # HomePage
@@ -42,19 +52,37 @@ def homepage():
 @app.route("/sms", methods=['GET', 'POST'])
 def incoming_sms():
     """Respond to SMS."""
-    email = request.form.get('Body', None)
+    plat = request.form.get('provider', '')
 
-    if email is None or not validate_email(email):
+    if plat.lower() == "twilio":
+        sms_from = request.form.get('From', '')
+        sms_to = request.form.get('To', '')
+        sms_txt = request.form.get('Body', '')
+
+        address = email_lookup(sms_to)
+        if address:
+            send_email(to_email=address, txt_from=sms_from, txt_body=sms_txt, txt_to=sms_to)
+
+    elif plat.lower() == "anveo":
+        sms_from = request.form.get('from', '')
+        sms_to = request.form.get('to', '')
+        sms_txt = request.form.get('message', '')
+
+        address = email_lookup(sms_to)
+        if address:
+            send_email(to_email=address, txt_from=sms_from, txt_body=sms_txt, txt_to=sms_to)
+
+    else:
         return (
             "<Response><Message>"
-            "Please provide a valid email address."
+            "Invalid Provider."
             "</Message></Response>"
         )
 
-    send_email(email)
-    return "<Response><Message>Coding is fun!</Message></Response>"
 
+email = email_lookup(sms_to)
+    #
 
-# Run Server
+# # Run Server
 # if app.__name__ == "__main__":
 #     app.run()
