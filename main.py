@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 # Set attribute to mitigate error in dev environ... Not sure of the root cause
 app.__name__ = "__main__"
-app.name = "Berthfield Server"
+# app.name = "Berthfield Server"
 
 # Get formatted date for the index template.
 date = datetime.datetime.now()
@@ -56,5 +56,5 @@ def incoming_sms():
 
 
 # Run Server
-if app.__name__ == "__main__":
-    app.run(debug=True)
+# if app.__name__ == "__main__":
+#     app.run()
