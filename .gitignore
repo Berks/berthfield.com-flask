@@ -3,3 +3,4 @@
 /templates/
 /static/
 *.pyc
+/app.yaml
