@@ -4,12 +4,13 @@ import datetime
 import json
 
 # Imports for the twilio sms endpoint
-import sendgrid
+from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 # from validate_email import validate_email
 
 # Create sendgrid instance
-sg = sendgrid.SendGridAPIClient(api_key=os.environ["SENDGRID_API_KEY"])
+sg = SendGridAPIClient(api_key=os.environ["SENDGRID_API_KEY"])
+
 # Create flask instance
 app = Flask(__name__)
 
@@ -31,16 +32,23 @@ def email_lookup(num):
 
 def send_email(to_email, txt_from, txt_to, txt_body):
     """Send a templated email with SendGrid."""
-    mail = Mail()
-    mail.from_email = f"{txt_from}@berthfield.com"
-    mail.subject = f'SMS from {txt_from} for {txt_to}.'
-    mail.to_emails = txt_to
-    mail.html_content = f'<p>{txt_body}</p>'
+    mail = Mail(
+        from_email = f"{txt_from}@berthfield.com",
+        to_emails = f"{to_email}",
+        subject = f'SMS from {txt_from} for {txt_to}.',
+        html_content = f'{txt_to}'
+    )
 
-    response = sg.send(mail)
-    print(response.status_code, response.body, response.headers)
-    # sg.client.mail.send.post(request_body=mail.get())
-
+    try:
+        response = sg.send(mail)
+        # print(response)
+        print(response.status_code, response.body, response.headers)
+    except Exception as e:
+        print(e.message)
+    #sg.client.mail.send.post(request_body=mail.get())
+    #print(f"from email: {mail.from_email}")
+    #print(f"To: {mail.to_emails}")
+    #print(f"body: {mail.html_content}")
 
 
 # HomePage
@@ -52,21 +60,23 @@ def homepage():
 @app.route("/sms", methods=['GET', 'POST'])
 def incoming_sms():
     """Respond to SMS."""
-    plat = request.form.get('provider', '')
+    plat = request.args['provider']
 
-    if plat.lower() == "twilio":
-        sms_from = request.form.get('From', '')
-        sms_to = request.form.get('To', '')
-        sms_txt = request.form.get('Body', '')
+    print(plat)
+
+    if plat == 'twilio':
+        sms_from = request.args['From']
+        sms_to = request.args['To']
+        sms_txt = request.args['Body']
 
         address = email_lookup(sms_to)
         if address:
             send_email(to_email=address, txt_from=sms_from, txt_body=sms_txt, txt_to=sms_to)
 
-    elif plat.lower() == "anveo":
-        sms_from = request.form.get('from', '')
-        sms_to = request.form.get('to', '')
-        sms_txt = request.form.get('message', '')
+    elif plat == 'anveo':
+        sms_from = request.args['from']
+        sms_to = request.args['to']
+        sms_txt = request.args['message']
 
         address = email_lookup(sms_to)
         if address:
@@ -75,14 +85,14 @@ def incoming_sms():
     else:
         return (
             "<Response><Message>"
-            "Invalid Provider."
+            f"Invalid Provider.{plat}"
             "</Message></Response>"
         )
 
 
-email = email_lookup(sms_to)
+# email = email_lookup(sms_to)
     #
 
 # # Run Server
 # if app.__name__ == "__main__":
-#     app.run()
+#     app.run(debug=True)
