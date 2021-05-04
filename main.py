@@ -72,13 +72,14 @@ def email_lookup(num):
         except KeyError:
             return False
 
+
 def send_email(to_email, txt_from, txt_to, txt_body):
     """Send a templated email with SendGrid."""
     mail = Mail(
-        from_email = f"{txt_from}@berthfield.com",
-        to_emails = f"{to_email}",
-        subject = f'SMS from {txt_from} for {txt_to}.',
-        html_content = f'{txt_body}'
+        from_email=f"{txt_from}@berthfield.com",
+        to_emails=f"{to_email}",
+        subject=f'SMS from {txt_from} for {txt_to}.',
+        html_content=f'{txt_body}'
     )
 
     try:
@@ -103,7 +104,7 @@ def incoming_twil_sms():
     print(f"from: {sms_from} type: {type(sms_from)}")
     sms_to = request.form['To']
     sms_txt = request.form['Body']
-    address = email_lookup(sms_to)
+    address = email_lookup(sms_to)  # Twilio numbers send a +
 
     if address:
         return str(send_email(to_email=address, txt_from=sms_from, txt_body=sms_txt, txt_to=sms_to))
@@ -113,19 +114,11 @@ def incoming_twil_sms():
 
 @app.route("/sms-anv", methods=['GET', 'POST'])
 def incoming_anv_sms():
-    request_args = {key:value for (key,value) in request.args.items()}
-    logging.warning(request_args)
-    print(request_args)
-
     """Respond to SMS."""
-    print(f'Provider: Anveo')
-    sms_from = request.args['from']
-    print(f"from: {sms_from} type: {type(sms_from)}")
-    sms_to = request.args['to']
-    print(f"to: {sms_to} type: {type(sms_to)}")
-    sms_txt = request.args['message']
-    print(f"to: {sms_to} type: {type(sms_to)}")
-    address = email_lookup(sms_to)
+    sms_from = request.args.get('from', '')
+    sms_to = request.args.get('to', '')
+    sms_txt = request.args.get('message', '')
+    address = email_lookup(sms_to)  # Anveo numbers do not send the +
 
     if address:
         return str(send_email(to_email=address, txt_from=sms_from, txt_body=sms_txt, txt_to=sms_to))
@@ -133,7 +126,7 @@ def incoming_anv_sms():
         return "invalid number"
 
 
-@app.teardown_request # log request and response info after extension's callbacks
+@app.teardown_request  # log request and response info after extension's callbacks
 def log_request_time(_exception):
     logger.info(
         f"{request.method} {request.path} - Sent {g.response.status_code}" +
@@ -141,16 +134,9 @@ def log_request_time(_exception):
 
 
 # Enable Debug
-app.debug = True
+# app.debug = True
 
 
 # Run Server
 # if app.__name__ == "__main__":
 #     app.run(debug=True)
-
-
-
-
-
-
-
