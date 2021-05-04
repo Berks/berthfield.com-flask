@@ -12,8 +12,6 @@
 # below:
 .git
 .gitignore
-#/venv/
-#/.idea/
 
 # Python pycache:
 __pycache__/
