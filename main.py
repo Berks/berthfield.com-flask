@@ -65,6 +65,14 @@ formatted_date = date.strftime("%b, %Y")
 
 def email_lookup(num):
     with open("num_sheet.json") as data:
+        """Looks up the email to be used from num_sheet.json
+        Emails are stored in json format with the number being used as the key.
+        Eg:
+        {
+        "1NXXNXXXXXX": "email@example.com",
+        "+1NXXNXXXXXX": "email@example.com"
+        }
+        """
         num_dict = json.load(data)
         to_email = {value for (key, value) in num_dict.items() if str(num) == key}
         try:
@@ -74,7 +82,7 @@ def email_lookup(num):
 
 
 def send_email(to_email, txt_from, txt_to, txt_body):
-    """Send a templated email with SendGrid."""
+    """Send an email using SendGrid."""
     mail = Mail(
         from_email=f"{txt_from}@berthfield.com",
         to_emails=f"{to_email}",
@@ -84,7 +92,6 @@ def send_email(to_email, txt_from, txt_to, txt_body):
 
     try:
         response = sg.send(mail)
-        # print(response)
         print(response.status_code, response.body, response.headers)
         return response.status_code
     except Exception as e:
@@ -99,7 +106,7 @@ def homepage():
 
 @app.route("/sms-twil", methods=['GET', 'POST'])
 def incoming_twil_sms():
-    """Respond to SMS."""
+    """Parses the incoming request and calls the send email function."""
     sms_from = request.form['From']
     print(f"from: {sms_from} type: {type(sms_from)}")
     sms_to = request.form['To']
@@ -114,7 +121,7 @@ def incoming_twil_sms():
 
 @app.route("/sms-anv", methods=['GET', 'POST'])
 def incoming_anv_sms():
-    """Respond to SMS."""
+    """Parses the incoming request and calls the send email function."""
     sms_from = request.args.get('from', '')
     sms_to = request.args.get('to', '')
     sms_txt = request.args.get('message', '')
