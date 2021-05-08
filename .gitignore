@@ -4,7 +4,7 @@
 
 # Ignore Flask template and static directories.
 /templates/
-/static/
+/app/static/
 
 # Ignore all cached files
 *.pyc
@@ -21,4 +21,4 @@
 #    "1NXXNXXXXXX": "email@example.com",
 #    "+1NXXNXXXXXX": "email@example.com"
 # }
-/num_sheet.json
+/sms/data/num_sheet.json
