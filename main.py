@@ -95,7 +95,7 @@ def send_email(to_email, txt_from, txt_to, txt_body):
         print(response.status_code, response.body, response.headers)
         return response.status_code
     except Exception as e:
-        print(e.message)
+        print(e.messages)
 
 
 # HomePage
@@ -103,6 +103,9 @@ def send_email(to_email, txt_from, txt_to, txt_body):
 def homepage():
     return render_template("index.html", present_date=formatted_date)
 
+@app.route('/blog')
+def blog():
+    return render_template("coming_soon.html")
 
 @app.route("/sms-twil", methods=['GET', 'POST'])
 def incoming_twil_sms():
@@ -145,5 +148,5 @@ def log_request_time(_exception):
 
 
 # Run Server
-# if app.__name__ == "__main__":
-#     app.run(debug=True)
+if app.__name__ == "__main__":
+    app.run(debug=True)
