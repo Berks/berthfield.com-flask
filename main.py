@@ -38,8 +38,6 @@ LOG_CONFIG = {
     }
 }
 
-
-
 config.dictConfig(LOG_CONFIG)  # load log config from dict
 logger = logging.getLogger("root")  # get root logger instance
 FlaskGoogleCloudLogger(app)
@@ -50,7 +48,6 @@ def log_request_time(_exception):
     logger.info(
         f"{request.method} {request.path} - Sent {g.response.status_code}" +
         " in {g.request_time:.5f}ms")
-
 
 
 # Run Server
