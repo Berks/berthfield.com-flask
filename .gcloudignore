@@ -13,7 +13,14 @@
 .git
 .gitignore
 
+# Ignore venv (app engine does fresh install from requirements)
+/venv
+
 # Python pycache:
 __pycache__/
 # Ignored by the build system
 /setup.cfg
+
+# Ignore self-signed cert used for testing
+cert.pem
+key.pem

@@ -22,3 +22,7 @@
 #    "+1NXXNXXXXXX": "email@example.com"
 # }
 /sms/data/num_sheet.json
+
+# Ignore self-signed cert used for testing
+cert.pem
+key.pem
