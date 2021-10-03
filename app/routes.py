@@ -17,7 +17,12 @@ def homepage():
 
 @app.route('/blog')
 def blog():
-    return render_template("coming_soon.html")
+    return render_template("blog.html")
+
+
+@app.route('/post.html')
+def post():
+    return render_template("post.html")
 
 
 @app.route("/sms-twil", methods=['GET', 'POST'])
