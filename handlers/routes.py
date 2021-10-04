@@ -1,5 +1,4 @@
 from sms import sms
-from app import app
 from flask import render_template, request
 import datetime
 
@@ -10,22 +9,18 @@ formatted_date = date.strftime("%b, %Y")
 
 
 # Defines routes for the Flask Application
-@app.route('/')
 def homepage():
     return render_template("index.html", present_date=formatted_date)
 
 
-@app.route('/blog')
 def blog():
     return render_template("blog.html")
 
 
-@app.route('/post.html')
 def post():
     return render_template("post.html")
 
 
-@app.route("/sms-twil", methods=['GET', 'POST'])
 def incoming_twil_sms():
     """Parses the incoming request and calls the send email function."""
     sms_from = request.form['From']
@@ -40,7 +35,6 @@ def incoming_twil_sms():
         return "invalid number"
 
 
-@app.route("/sms-anv", methods=['GET', 'POST'])
 def incoming_anv_sms():
     """Parses the incoming request and calls the send email function."""
     sms_from = request.args.get('from', '')
@@ -52,7 +46,3 @@ def incoming_anv_sms():
         return str(sms.send_email(to_email=address, txt_from=sms_from, txt_body=sms_txt, txt_to=sms_to))
     else:
         return "invalid number"
-
-
-
-

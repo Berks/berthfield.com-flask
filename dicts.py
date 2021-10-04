@@ -1,15 +1,4 @@
-from flask import Flask
-from flask import request, g
-from flask_talisman import Talisman
-
-# import logging
-import logging
-from logging import config
-from flask_google_cloud_logger import FlaskGoogleCloudLogger
-
-app = Flask(__name__)
-
-
+# Configuration structure for GCP Logging
 LOG_CONFIG = {
     "version": 1,
     "formatters": {
@@ -40,18 +29,6 @@ LOG_CONFIG = {
     }
 }
 
-config.dictConfig(LOG_CONFIG)  # load log config from dict
-logger = logging.getLogger("root")  # get root logger instance
-
-FlaskGoogleCloudLogger(app)
-
-
-@app.teardown_request  # log request and response info after extension's callbacks
-def log_request_time(_exception):
-    logger.info(
-        f"{request.method} {request.path} - Sent {g.response.status_code}" +
-        " in {g.request_time:.5f}ms")
-
 #   Content security Policy
 #   Allows scripts and offsite-content to be displayed.
 #   Defaults to blocking all and allowing from the whitelist below
@@ -73,8 +50,3 @@ csp = {
 
         ],
 }
-
-
-Talisman(app, content_security_policy=csp)
-
-from app import routes
