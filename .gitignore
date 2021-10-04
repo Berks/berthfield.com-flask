@@ -4,7 +4,7 @@
 
 # Ignore Flask template and static directories.
 /templates/
-/app/static/
+/static/
 
 # Ignore all cached files
 *.pyc
@@ -21,7 +21,7 @@
 #    "1NXXNXXXXXX": "email@example.com",
 #    "+1NXXNXXXXXX": "email@example.com"
 # }
-/sms/data/num_sheet.json
+/methods/data/num_sheet.json
 
 # Ignore self-signed cert used for testing
 cert.pem

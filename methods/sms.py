@@ -1,4 +1,4 @@
-# Imports for the twilio sms endpoint
+# Imports for the twilio methods endpoint
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from pathlib import Path
