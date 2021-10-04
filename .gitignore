@@ -31,3 +31,8 @@ key.json
 firebase.json
 *.log
 .gcloudignore
+key.json
+/methods/lorem-ipsum.py
+firebase.json
+*.log
+.gcloudignore
