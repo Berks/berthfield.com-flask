@@ -26,3 +26,8 @@
 # Ignore self-signed cert used for testing
 cert.pem
 key.pem
+key.json
+/methods/lorem-ipsum.py
+firebase.json
+*.log
+.gcloudignore

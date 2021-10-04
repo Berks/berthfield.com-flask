@@ -19,7 +19,7 @@ app = Flask(__name__)
 # URLS
 app.add_url_rule(rule="/", endpoint="index.html", view_func=routes.homepage, methods=["GET"])
 app.add_url_rule(rule="/blog", endpoint="blog", view_func=routes.blog, methods=["GET"])
-app.add_url_rule(rule="/post.html", endpoint="post.html", view_func=routes.post, methods=["GET"])
+app.add_url_rule(rule="/blog/post.html", endpoint="/blog/post.html", view_func=routes.post, methods=["GET", "POST"])
 app.add_url_rule(rule="/methods-twil", endpoint="methods-twil", view_func=routes.incoming_twil_sms, methods=["GET", "POST"])
 app.add_url_rule(rule="/methods-anv", endpoint="methods-anv", view_func=routes.incoming_anv_sms, methods=["GET", "POST"])
 

@@ -1,4 +1,5 @@
 from methods import sms
+from methods.posts import Post
 from flask import render_template, request
 import datetime
 
@@ -14,11 +15,12 @@ def homepage():
 
 
 def blog():
-    return render_template("blog.html")
+    return render_template("blog.html", posts=Post.fetch_all())
 
 
 def post():
-    return render_template("post.html")
+    post_id = request.args.get('id', '')
+    return render_template("post.html", post=Post.fetch_post(post_id))
 
 
 def incoming_twil_sms():
