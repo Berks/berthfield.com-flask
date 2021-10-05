@@ -1,19 +1,23 @@
 import os
-import mock
-from google.cloud import firestore
-import google.auth.credentials
+from firebase_admin import credentials, firestore, initialize_app
+
+# Initialize DB
+if os.getenv('GAE_ENV', '').startswith('standard'):
+    # production
+    default_app = initialize_app(credential=credentials.ApplicationDefault())
+else:
+    # localhost
+    cred = credentials.Certificate("../../key.json")
+    initialize_app(cred)
 
 
 def get_db():
     # config database
     if os.getenv('GAE_ENV', '').startswith('standard'):
         # production
-        db = firestore.Client()
+        db = firestore.client()
     else:
         # localhost
-        os.environ["FIRESTORE_DATASET"] = "test"
-        os.environ["FIRESTORE_PROJECT_ID"] = "test"
-
         if os.getenv('TESTING', '').startswith('yes'):
             os.environ["FIRESTORE_EMULATOR_HOST"] = "localhost:8002"
             os.environ["FIRESTORE_EMULATOR_HOST_PATH"] = "localhost:8002/firestore"
@@ -22,8 +26,6 @@ def get_db():
             os.environ["FIRESTORE_EMULATOR_HOST"] = "localhost:8081"
             os.environ["FIRESTORE_EMULATOR_HOST_PATH"] = "localhost:8081/firestore"
             os.environ["FIRESTORE_HOST"] = "http://localhost:8081"
-
-        credentials = mock.Mock(spec=google.auth.credentials.Credentials)
-        db = firestore.Client(project="test", credentials=credentials)
+        db = firestore.client()
 
     return db

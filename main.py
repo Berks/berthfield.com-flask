@@ -23,8 +23,6 @@ app.add_url_rule(rule="/blog/post.html", endpoint="/blog/post.html", view_func=r
 app.add_url_rule(rule="/methods-twil", endpoint="methods-twil", view_func=routes.incoming_twil_sms, methods=["GET", "POST"])
 app.add_url_rule(rule="/methods-anv", endpoint="methods-anv", view_func=routes.incoming_anv_sms, methods=["GET", "POST"])
 
-# Wrap with taliban for security
-Talisman(app, content_security_policy=dicts.csp)
 
 # Incorporate Logging
 config.dictConfig(dicts.LOG_CONFIG)  # load log config from dict
@@ -39,6 +37,8 @@ def log_request_time(_exception):
         f"{request.method} {request.path} - Sent {g.response.status_code}" +
         " in {g.request_time:.5f}ms")
 
+# Wrap with taliban for security
+Talisman(app, content_security_policy=dicts.csp)
 
 if __name__ == '__main__':
     if os.getenv('GAE_ENV', '').startswith('standard'):

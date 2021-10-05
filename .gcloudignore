@@ -14,17 +14,20 @@
 .gitignore
 
 # Ignore venv (app engine does fresh install from requirements)
-/venv
+venv/
+.idea/
 
 # Python pycache:
 __pycache__/
 # Ignored by the build system
-/setup.cfg
+setup.cfg
 
 # Ignore self-signed cert used for testing
 cert.pem
 key.pem
-key.json
-/methods/lorem-ipsum.py
-firebase.json
+
+# Ignore firestore files
 *.log
+firebase.json
+key.json
+firebasedata/

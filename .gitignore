@@ -24,15 +24,12 @@
 /methods/data/num_sheet.json
 
 # Ignore self-signed cert used for testing
-cert.pem
-key.pem
-key.json
-/methods/lorem-ipsum.py
-firebase.json
-*.log
-.gcloudignore
-key.json
-/methods/lorem-ipsum.py
-firebase.json
-*.log
-.gcloudignore
+/cert.pem
+/key.pem
+
+# Ignore firebase files
+/firebasedata/
+/key.json
+/firebase.json
+/*.log
+/.gcloudignore

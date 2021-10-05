@@ -1,6 +1,7 @@
 from methods.database import get_db
 import datetime
 
+
 class Post:
     """
     Post schema:
@@ -15,11 +16,11 @@ class Post:
           # create a post document reference
         # now you can create or update the post document (set: if it exists, update it. If not, create a new one).
         post_ref.set({
-            u'header-image': u'{}'.format(head_img),
-            u'title': u'{}'.format(title),  # Title of the post
-            u'subtitle': u'{}'.format(sub),
-            u'text': u'{}'.format(body),  # we could also name this smth else, like "text", to avoid confusion
-            u'img': u'{}'.format(img),
+            u'header_image': u'{}'.format(text),
+            u'title': u'{}'.format(text),  # Title of the post
+            u'subtitle': u'{}'.format(text),
+            u'body': u'{}'.format(text),  # we could also name this smth else, like "text", to avoid confusion
+            u'img': u'{}'.format(text),
             u'created': datetime.datetime.now(),
             # you could add other fields here, like "author", "email" etc.
         })
@@ -46,7 +47,6 @@ class Post:
             posts.append(post_dict)  # appending the message dict to the messages list
 
         return posts
-
 
     @classmethod
     def fetch_post(cls, id):
