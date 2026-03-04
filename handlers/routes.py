@@ -1,5 +1,4 @@
 from methods import sms
-from methods.posts import Post
 from flask import render_template, request
 import datetime
 
